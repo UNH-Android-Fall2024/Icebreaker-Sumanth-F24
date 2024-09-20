@@ -1,6 +1,7 @@
 package com.unh.icebreakersumanthf24
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,8 +23,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSubmit.setOnClickListener {
             binding.txtQuestion.text = ""
+
+            writeStudentToFirebase()
         }
     }
 
+    private fun writeStudentToFirebase() {
+        val firstName = binding.txtFirstName.text
+        val lastName = binding.txtLastName.text
+        val prefName = binding.txtPrefName.text
+        val answer = binding.txtAnswer.text
+
+        Log.d("IcebreakerF24", "Variables: $firstName $lastName $prefName $answer")
+
+    }
 
 }
