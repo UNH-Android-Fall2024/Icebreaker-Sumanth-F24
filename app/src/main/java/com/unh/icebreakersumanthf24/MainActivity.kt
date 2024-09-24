@@ -3,6 +3,7 @@ package com.unh.icebreakersumanthf24
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,15 +16,17 @@ class MainActivity : AppCompatActivity() {
     private val className = "Android-Fall24"
     private val db = Firebase.firestore
     private var TAG = "IcebreakerF24"
+    private var questionBank: MutableList<Questions>? = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        getQuestionsFromFirebase()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.btnSetRandomQuestion.setOnClickListener {
-            binding.txtQuestion.text = "HELLO!"
+            binding.txtQuestion.text = questionBank!!.random().text
+
         }
 
         binding.btnSubmit.setOnClickListener {
@@ -33,13 +36,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getQuestionsFromFirebase(){
+        db.collection("Questions")
+            .get()
+            .addOnSuccessListener { result ->
+                questionBank = mutableListOf()
+                for(document in result) {
+                    val question = document.toObject(Questions::class.java)
+                    questionBank!!.add(question)
+                    Log.d(TAG,"$question")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error", exception)
+            }
+    }
+
     private fun writeStudentToFirebase() {
         val firstName = binding.txtFirstName
         val lastName  = binding.txtLastName
         val prefName  = binding.txtPrefName
         val answer    = binding.txtAnswer
 
-        Log.d(TAG, "Variables: $firstName $lastName $prefName $answer")
+        Log.d(TAG, "Variables: ${firstName.text} $lastName $prefName $answer")
 
         val student = hashMapOf(
             "firstname" to firstName.text.toString(),
