@@ -30,9 +30,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnSubmit.setOnClickListener {
-            binding.txtQuestion.text = ""
-
             writeStudentToFirebase()
+            binding.txtQuestion.text = ""
         }
     }
 
@@ -57,8 +56,9 @@ class MainActivity : AppCompatActivity() {
         val lastName  = binding.txtLastName
         val prefName  = binding.txtPrefName
         val answer    = binding.txtAnswer
+        val question  = binding.txtQuestion.text.toString()
 
-        Log.d(TAG, "Variables: ${firstName.text} $lastName $prefName $answer")
+        Log.d(TAG, "Variables: ${firstName.text} ${lastName.text} ${prefName.text} ${answer.text} $question")
 
         val student = hashMapOf(
             "firstname" to firstName.text.toString(),
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             "prefname"  to prefName.text.toString(),
             "answer"    to answer.text.toString(),
             "class"     to className,
-            "question"  to binding.txtQuestion.text.toString()
+            "question"  to question
         )
 
         db.collection("students")
